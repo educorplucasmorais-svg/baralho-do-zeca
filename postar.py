@@ -13,7 +13,10 @@ Uso (no terminal, dentro desta pasta):
 So usa a biblioteca padrao do Python: nada para instalar.
 """
 import json, os, re, sys, time, urllib.request, urllib.parse, urllib.error
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+
+TZ_BR = timezone(timedelta(hours=-3))      # horario de Brasilia
+INTERVALO_MIN_H = 12                       # nunca dois posts com menos de 12h de diferenca
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")   # acentos no terminal do Windows
@@ -195,7 +198,7 @@ def publicar(cfg, pasta, simular=False, forcar=False):
                                                  "caption": post["legenda"]})["id"]
         esperar_pronto(cfg, cid, "do carrossel")
     mid = chamar(cfg, "POST", f"{ig}/media_publish", {"creation_id": cid})["id"]
-    reg[pasta] = {"media_id": mid, "quando": datetime.now().strftime("%Y-%m-%d %H:%M")}
+    reg[pasta] = {"media_id": mid, "quando": datetime.now(TZ_BR).isoformat(timespec="minutes")}
     salvar_registro(reg)
     print(f"   PUBLICADO em @{usuario} (id {mid})")
     return mid
@@ -216,6 +219,19 @@ def cmd_testar(cfg):
     if prox:
         publicar(cfg, prox, simular=True)
     print("\nTudo certo para publicar.")
+
+def horas_desde_ultimo():
+    """Horas desde a ultima publicacao registrada (None se nada saiu ainda)."""
+    datas = []
+    for v in registro().values():
+        try:
+            d = datetime.fromisoformat(v["quando"])
+            datas.append(d if d.tzinfo else d.replace(tzinfo=TZ_BR))
+        except Exception:
+            pass
+    if not datas:
+        return None
+    return (datetime.now(TZ_BR) - max(datas)).total_seconds() / 3600
 
 def proximo_da_fila():
     reg = registro()
@@ -257,6 +273,11 @@ def main():
             p = proximo_da_fila()
             if not p:
                 print("A serie terminou: nada na fila."); return
+            h = horas_desde_ultimo()
+            if h is not None and h < INTERVALO_MIN_H and "--forcar" not in flags and "--simular" not in flags:
+                print(f"O ultimo post saiu ha {h:.1f}h. Para evitar post em dobro, o proximo ({p}) "
+                      f"so sai depois de {INTERVALO_MIN_H}h. Use --forcar para publicar mesmo assim.")
+                return
             publicar(cfg, p, simular="--simular" in flags)
         elif cmd == "publicar" and len(args) > 1:
             publicar(cfg, achar_pasta(args[1]), simular="--simular" in flags, forcar="--forcar" in flags)
