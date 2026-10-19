@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write             # para gravar o publicados.json de volta no repositorio
+  issues: write               # para abrir o aviso quando bater 1.000 seguidores
 
 concurrency:
   group: postar
@@ -17,21 +18,34 @@ concurrency:
 jobs:
   postar:
     runs-on: ubuntu-latest
+    env:
+      IG_TOKEN: ${{ secrets.IG_TOKEN }}
+      URL_BASE: https://raw.githubusercontent.com/${{ github.repository }}/main/posts/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Publicar o proximo post
-        env:
-          IG_TOKEN: ${{ secrets.IG_TOKEN }}
-          URL_BASE: https://raw.githubusercontent.com/${{ github.repository }}/main/posts/
         run: python postar.py proximo
+      - name: Anotar seguidores do dia
+        id: metricas
+        if: always()
+        continue-on-error: true
+        run: python postar.py metricas
+      - name: Avisar que bateu a meta de seguidores
+        if: always() && steps.metricas.outputs.marco != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create --title "Bateu ${{ steps.metricas.outputs.marco }} seguidores!" \
+            --body "@${{ github.repository_owner }} ${{ steps.metricas.outputs.mensagem }} Veja a evolucao no metricas.csv."
       - name: Guardar o registro do que saiu
         if: always()   # grava o registro mesmo se so a story falhar
         run: |
           git config user.name "postador-baralho"
           git config user.email "postador-baralho@users.noreply.github.com"
-          git add publicados.json
+          git add publicados.json metricas.csv
           git commit -m "Publicado em $(date +%F)" || echo "nada novo"
+          git pull --rebase
           git push
