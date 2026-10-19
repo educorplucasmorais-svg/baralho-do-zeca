@@ -8,6 +8,7 @@ Uso (no terminal, dentro desta pasta):
     py postar.py proximo              publica o proximo post da fila
     py postar.py proximo --simular    mostra o que seria publicado, sem publicar
     py postar.py publicar 07          publica uma pasta especifica (numero ou nome)
+    py postar.py story 07             publica so a story de uma pasta (se ainda nao saiu)
     py postar.py renovar-token        renova o token (valido por 60 dias) e grava no config.txt
 
 So usa a biblioteca padrao do Python: nada para instalar.
@@ -118,7 +119,7 @@ def salvar_registro(reg):
 
 def montar_post(cfg, pasta):
     dirp = pastas()[pasta]
-    slides = sorted(f for f in os.listdir(dirp) if f.lower().endswith((".jpg", ".jpeg")))
+    slides = sorted(f for f in os.listdir(dirp) if re.match(r"^\d+\.jpe?g$", f, re.I))
     if not slides:
         sair(f"A pasta {pasta} nao tem imagens .jpg")
     if len(slides) > 10:
@@ -128,7 +129,10 @@ def montar_post(cfg, pasta):
     if len(legenda) > 2200:
         sair(f"A legenda de {pasta} passa de 2200 caracteres")
     urls = [cfg["URL_BASE"] + urllib.parse.quote(f"{pasta}/{s}") for s in slides]
-    return {"pasta": pasta, "urls": urls, "legenda": legenda}
+    story = None
+    if os.path.exists(os.path.join(dirp, "story.jpg")):
+        story = cfg["URL_BASE"] + urllib.parse.quote(f"{pasta}/story.jpg")
+    return {"pasta": pasta, "urls": urls, "legenda": legenda, "story": story}
 
 def achar_pasta(alvo):
     ps = fila()
@@ -171,7 +175,10 @@ def publicar(cfg, pasta, simular=False, forcar=False):
         print(f"   {u}")
     print("   legenda: " + post["legenda"].splitlines()[0][:90] + ("..." if post["legenda"] else ""))
 
-    ruins = [(u, t) for u in post["urls"] for ok, t in [url_acessivel(u)] if not ok]
+    if post["story"]:
+        print(f"   story: {post['story']}")
+    todas = post["urls"] + ([post["story"]] if post["story"] else [])
+    ruins = [(u, t) for u in todas for ok, t in [url_acessivel(u)] if not ok]
     if ruins:
         for u, t in ruins:
             print(f"   [X] nao abre como JPEG: {u}  ({t})")
@@ -201,7 +208,28 @@ def publicar(cfg, pasta, simular=False, forcar=False):
     reg[pasta] = {"media_id": mid, "quando": datetime.now(TZ_BR).isoformat(timespec="minutes")}
     salvar_registro(reg)
     print(f"   PUBLICADO em @{usuario} (id {mid})")
+    if post["story"]:
+        publicar_story(cfg, pasta, post["story"], ig)
     return mid
+
+def publicar_story(cfg, pasta, url, ig=None):
+    """Publica a story de chamada. Se falhar, o carrossel continua registrado."""
+    reg = registro()
+    try:
+        ig = ig or minha_conta(cfg)[0]
+        sid = chamar(cfg, "POST", f"{ig}/media", {"image_url": url, "media_type": "STORIES"})["id"]
+        esperar_pronto(cfg, sid, "da story")
+        smid = chamar(cfg, "POST", f"{ig}/media_publish", {"creation_id": sid})["id"]
+        reg.setdefault(pasta, {})["story_id"] = smid
+        reg[pasta].pop("story_erro", None)
+        salvar_registro(reg)
+        print(f"   STORY publicada (id {smid})")
+    except RuntimeError as e:
+        reg.setdefault(pasta, {})["story_erro"] = str(e)[:300]
+        salvar_registro(reg)
+        print(f"\n[ERRO] O carrossel saiu, mas a story nao: {e}")
+        print(f"       Para tentar de novo: py postar.py story {pasta}")
+        sys.exit(2)
 
 
 # ---------------- comandos ----------------
@@ -281,6 +309,20 @@ def main():
             publicar(cfg, p, simular="--simular" in flags)
         elif cmd == "publicar" and len(args) > 1:
             publicar(cfg, achar_pasta(args[1]), simular="--simular" in flags, forcar="--forcar" in flags)
+        elif cmd == "story" and len(args) > 1:
+            p = achar_pasta(args[1])
+            reg = registro()
+            if reg.get(p, {}).get("story_id") and "--forcar" not in flags:
+                sair(f"A story de {p} ja saiu. Use --forcar para publicar de novo.")
+            post = montar_post(cfg, p)
+            if not post["story"]:
+                sair(f"A pasta {p} nao tem story.jpg")
+            ok, tipo = url_acessivel(post["story"])
+            if not ok:
+                sair(f"A story nao abre como JPEG: {post['story']} ({tipo})")
+            if "--simular" in flags:
+                print(f"   (simulacao) story de {p}: {post['story']}"); return
+            publicar_story(cfg, p, post["story"])
         elif cmd == "renovar-token":
             cmd_renovar(cfg)
         else:

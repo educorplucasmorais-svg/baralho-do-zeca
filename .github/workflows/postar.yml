@@ -28,7 +28,7 @@ jobs:
           URL_BASE: https://raw.githubusercontent.com/${{ github.repository }}/main/posts/
         run: python postar.py proximo
       - name: Guardar o registro do que saiu
-        if: success()
+        if: always()   # grava o registro mesmo se so a story falhar
         run: |
           git config user.name "postador-baralho"
           git config user.email "postador-baralho@users.noreply.github.com"
