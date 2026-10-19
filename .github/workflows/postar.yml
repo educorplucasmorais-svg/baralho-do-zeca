@@ -1,0 +1,37 @@
+# Opcao nuvem: o GitHub publica sozinho todo dia, sem o computador ligado.
+# Use ESTA opcao OU o agendamento do Windows, nunca as duas (postaria em dobro).
+name: Post diario do Baralho do Zeca
+
+on:
+  schedule:
+    - cron: "0 19 * * *"     # 19h UTC = 16h em Brasilia
+  workflow_dispatch:          # botao "Run workflow" para publicar na hora
+
+permissions:
+  contents: write             # para gravar o publicados.json de volta no repositorio
+
+concurrency:
+  group: postar
+  cancel-in-progress: false
+
+jobs:
+  postar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Publicar o proximo post
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          URL_BASE: https://raw.githubusercontent.com/${{ github.repository }}/main/posts/
+        run: python postar.py proximo
+      - name: Guardar o registro do que saiu
+        if: success()
+        run: |
+          git config user.name "postador-baralho"
+          git config user.email "postador-baralho@users.noreply.github.com"
+          git add publicados.json
+          git commit -m "Publicado em $(date +%F)" || echo "nada novo"
+          git push

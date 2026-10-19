@@ -1,0 +1,139 @@
+POSTAR O BARALHO DO ZECA PELO TERMINAL
+======================================
+
+O kit publica um carrossel por dia no @baralhodozeca, com legenda, pela API oficial
+da Meta. Você escolhe onde ele roda: no seu computador (Windows) ou na nuvem (GitHub),
+com o computador desligado.
+
+Preparação, uma vez só (uns 40 minutos):
+  1. Python instalado
+  2. Instagram como conta profissional
+  3. Um app na Meta e o token de acesso
+  4. As imagens num endereço público (GitHub, de graça)
+
+
+1. PYTHON
+---------
+python.org/downloads -> instale -> marque "Add python.exe to PATH".
+Teste: menu Iniciar -> digite "Terminal" -> abra -> digite:  py --version
+
+
+2. CONTA PROFISSIONAL
+---------------------
+App do Instagram -> Configurações e privacidade -> Tipo de conta e ferramentas
+-> Mudar para conta profissional -> Criador de conteúdo.
+
+
+3. APP NA META E TOKEN
+----------------------
+a. developers.facebook.com -> entre com seu Facebook -> Meus apps -> Criar app.
+b. No caso de uso, escolha o de Instagram ("Gerenciar mensagens e conteúdo no Instagram").
+c. Dentro do app: Instagram -> "Configuração da API com login do Instagram"
+   -> "Gerar tokens de acesso" -> Adicionar conta -> entre com o @baralhodozeca -> copie o token.
+d. Cole o token no config.txt, na linha TOKEN=
+
+Os nomes dos menus da Meta mudam de vez em quando. Se não achar, procure "Instagram API"
+dentro do app. Usando só na sua própria conta, normalmente o app não precisa passar
+pela revisão da Meta.
+
+
+4. IMAGENS NUM ENDEREÇO PÚBLICO (GITHUB)
+----------------------------------------
+A Meta não recebe arquivo do seu computador: ela baixa cada slide de um link público.
+
+a. Crie uma conta em github.com -> New repository -> nome: baralho-do-zeca -> Public -> Create.
+b. Instale o GitHub Desktop (desktop.github.com) e clone o repositório para o computador.
+c. Copie para dentro da pasta do repositório todo o conteúdo deste kit
+   e a pasta posts (veja "Montar a pasta posts" abaixo).
+d. No GitHub Desktop: Commit to main -> Push origin.
+e. No config.txt, preencha:
+   URL_BASE=https://raw.githubusercontent.com/SEU_USUARIO/baralho-do-zeca/main/posts/
+
+O config.txt NÃO sobe para o GitHub (está no .gitignore): o token fica só no seu computador.
+
+Atenção: repositório público = quem tiver o link vê as 52 cartas antes de saírem.
+Se preferir, suba só as pastas da semana seguinte de cada vez.
+
+
+MONTAR A PASTA POSTS
+--------------------
+Os slides vieram em 4 zips (posts-parte-1 a posts-parte-4). Abra cada um no
+Explorador de Arquivos: dentro há uma pasta "posts". Arraste essa pasta para dentro da
+pasta do kit. O Windows junta as quatro numa só. No final você tem:
+   posts\00a-capa
+   posts\00b-o-baralho
+   posts\01-as-de-copas ... posts\52-rei-de-espadas
+
+
+PRIMEIRO TESTE
+--------------
+Na pasta do kit, clique com o botão direito numa área vazia -> "Abrir no Terminal":
+
+   py postar.py testar
+
+Mostra a conta, quantos posts a API ainda permite nas próximas 24h e confere se os
+slides do próximo post abrem como JPEG. Se aparecer [X], a URL_BASE ou o upload estão errados.
+
+Depois:
+   py postar.py proximo --simular      mostra o que sairia, sem publicar
+   py postar.py proximo                publica de verdade
+
+
+COMANDOS
+--------
+   py postar.py status            o que já saiu e qual é o próximo
+   py postar.py proximo           publica o próximo da fila
+   py postar.py publicar 7        publica uma carta específica, pelo número
+   py postar.py publicar capa     publica a capa
+   py postar.py renovar-token     renova o token por mais 60 dias
+
+Fila: 00a-capa -> 00b-o-baralho -> 01 Ás de Copas ... 52 Rei de Espadas.
+O que já saiu fica anotado em publicados.json. O script nunca publica a mesma pasta
+duas vezes, a não ser que você peça com --forcar.
+
+
+POSTAR SOZINHO TODO DIA: ESCOLHA UMA OPÇÃO
+------------------------------------------
+OPÇÃO A - no computador (Windows)
+   Dois cliques em agendar-windows.bat. Todo dia às 16h ele roda postar-agora.bat e
+   grava o resultado em log-posts.txt.
+   - O computador precisa estar ligado, com você logado, às 16h. Se estiver desligado,
+     aquele dia não sai; no dia seguinte sai o próximo da fila, sem pular carta.
+   - Para pausar: dois cliques em cancelar-agendamento.bat.
+
+OPÇÃO B - na nuvem (GitHub), com o computador desligado
+   a. No repositório, no site do GitHub: Settings -> Secrets and variables -> Actions
+      -> New repository secret -> nome IG_TOKEN, valor = o token.
+   b. A pasta .github\workflows já está no kit e sobe junto com o resto.
+   c. Pronto: todo dia às 16h (Brasília) o GitHub publica o próximo e grava o
+      publicados.json no repositório. Em horário de pico pode atrasar alguns minutos.
+   d. Para publicar na hora: aba Actions -> "Post diario do Baralho do Zeca" -> Run workflow.
+
+   Use A ou B, nunca as duas: cada uma tem seu próprio registro e juntas postariam em dobro.
+
+
+TOKEN: VENCE EM 60 DIAS
+-----------------------
+A série tem 54 posts. Renove uma vez, perto do dia 30:
+   - Opção A: py postar.py renovar-token   (grava sozinho no config.txt)
+   - Opção B: rode o mesmo comando no computador e cole o token novo no segredo
+     IG_TOKEN do GitHub.
+
+
+O QUE O SCRIPT NÃO FAZ
+----------------------
+- Texto alternativo: a API ainda não documenta como enviar. O texto está no final do
+  legenda.txt de cada pasta; cole depois em: post -> ... -> Editar -> Texto alternativo.
+- Stories e destaques: a API não cria destaque. Compartilhar no story e salvar no
+  destaque continua no celular.
+- Responder comentários: continua com você.
+
+
+SE DER ERRO
+-----------
+A mensagem depois de "[ERRO] Meta respondeu" vem da própria Meta.
+- "Invalid OAuth access token": token errado ou vencido. Gere outro ou renove.
+- A Meta não conseguiu baixar a imagem: abra no navegador um dos links que o "testar"
+  mostra. Se o raw.githubusercontent der problema, ative o GitHub Pages
+  (Settings -> Pages -> Branch: main) e use:
+  URL_BASE=https://SEU_USUARIO.github.io/baralho-do-zeca/posts/
