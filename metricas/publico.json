@@ -1,0 +1,47 @@
+{
+ "coleta": "2026-10-19T21:12-03:00",
+ "follower_demographics": {
+  "age": {
+   "25-34": 69,
+   "35-44": 42,
+   "18-24": 23,
+   "45-54": 13,
+   "55-64": 4,
+   "65+": 4
+  },
+  "gender": {
+   "F": 79,
+   "M": 54,
+   "U": 22
+  },
+  "city": {
+   "Betim, Minas Gerais": 40,
+   "Belo Horizonte, Minas Gerais": 29,
+   "Contagem, Minas Gerais": 26,
+   "Juatuba, Minas Gerais": 6,
+   "Igarapé, Minas Gerais": 4,
+   "Sorocaba, São Paulo (state)": 4,
+   "Ibirité, Minas Gerais": 4,
+   "São Paulo, São Paulo (state)": 3,
+   "Divinópolis, Minas Gerais": 3,
+   "Goiânia, Goiás": 3,
+   "Sabará, Minas Gerais": 2,
+   "Rio de Janeiro, Rio de Janeiro (state)": 2,
+   "Alfenas, Minas Gerais": 2,
+   "London, England": 1,
+   "Central, Bahia": 1
+  },
+  "country": {
+   "BR": 151,
+   "US": 2,
+   "DE": 1,
+   "GB": 1
+  }
+ },
+ "engaged_audience_demographics": {
+  "age": "indisponivel: Meta respondeu 400: You can learn about your audience once this metric has more than 100 people in each breakdown.",
+  "gender": "indisponivel: Meta respondeu 400: You can learn about your audience once this metric has more than 100 people in each breakdown.",
+  "city": "indisponivel: Meta respondeu 400: You can learn about your audience once this metric has more than 100 people in each breakdown.",
+  "country": "indisponivel: Meta respondeu 400: You can learn about your audience once this metric has more than 100 people in each breakdown."
+ }
+}
