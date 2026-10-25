@@ -1,8 +1,8 @@
 {
- "coleta": "2026-10-23T21:11-03:00",
+ "coleta": "2026-10-24T21:13-03:00",
  "follower_demographics": {
   "age": {
-   "25-34": 74,
+   "25-34": 75,
    "35-44": 42,
    "18-24": 23,
    "45-54": 16,
@@ -11,13 +11,13 @@
   },
   "gender": {
    "F": 83,
-   "M": 57,
+   "M": 58,
    "U": 23
   },
   "city": {
-   "Betim, Minas Gerais": 44,
-   "Belo Horizonte, Minas Gerais": 29,
-   "Contagem, Minas Gerais": 27,
+   "Betim, Minas Gerais": 42,
+   "Belo Horizonte, Minas Gerais": 30,
+   "Contagem, Minas Gerais": 29,
    "Juatuba, Minas Gerais": 5,
    "São Paulo, São Paulo (state)": 4,
    "Igarapé, Minas Gerais": 4,
@@ -32,7 +32,7 @@
    "São Joaquim de Bicas, Minas Gerais": 2
   },
   "country": {
-   "BR": 159,
+   "BR": 160,
    "US": 2,
    "DE": 1,
    "GB": 1
