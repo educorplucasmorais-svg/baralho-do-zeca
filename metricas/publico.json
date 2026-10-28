@@ -1,5 +1,5 @@
 {
- "coleta": "2026-10-26T21:12-03:00",
+ "coleta": "2026-10-27T21:09-03:00",
  "follower_demographics": {
   "age": {
    "25-34": 75,
@@ -15,19 +15,19 @@
    "U": 23
   },
   "city": {
-   "Betim, Minas Gerais": 43,
-   "Belo Horizonte, Minas Gerais": 30,
+   "Betim, Minas Gerais": 45,
+   "Belo Horizonte, Minas Gerais": 29,
    "Contagem, Minas Gerais": 28,
    "Igarapé, Minas Gerais": 5,
    "Juatuba, Minas Gerais": 5,
-   "Divinópolis, Minas Gerais": 4,
    "Goiânia, Goiás": 4,
    "São Paulo, São Paulo (state)": 3,
+   "Divinópolis, Minas Gerais": 3,
    "Sorocaba, São Paulo (state)": 3,
    "Sabará, Minas Gerais": 2,
    "Rio de Janeiro, Rio de Janeiro (state)": 2,
-   "Alfenas, Minas Gerais": 2,
    "Mateus Leme, Minas Gerais": 2,
+   "Alfenas, Minas Gerais": 2,
    "Ibirité, Minas Gerais": 2,
    "London, England": 1
   },
