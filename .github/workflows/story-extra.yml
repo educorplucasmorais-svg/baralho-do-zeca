@@ -1,14 +1,17 @@
-# Botao manual: publica uma story extra (imagem JPG 1080x1920 dentro da pasta posts/).
+# Publica uma story extra (imagem JPG 1080x1920 dentro da pasta posts/).
+# Todo dia as 20h30 de Brasilia segue o posts/cronograma-stories.csv.
+# No botao: com "arquivo" preenchido publica aquela imagem; vazio segue o cronograma.
 # Nao mexe na fila de cartas nem no publicados.json.
 name: Story extra
 
 on:
+  schedule:
+    - cron: "30 23 * * *"    # 23h30 UTC = 20h30 em Brasilia
   workflow_dispatch:
     inputs:
       arquivo:
-        description: "Nome da imagem dentro da pasta posts (JPG 1080x1920)"
-        required: true
-        default: "story-extra-14-as-de-paus.jpg"
+        description: "Imagem dentro da pasta posts (JPG 1080x1920). Vazio: segue o cronograma de hoje"
+        required: false
 
 permissions:
   contents: read
@@ -32,12 +35,33 @@ jobs:
       - name: Publicar a story extra
         run: |
           python - <<'PY'
-          import os, urllib.parse
+          import csv, os, sys, urllib.parse
+          from datetime import datetime, timedelta, timezone
           import postar as p
           cfg = p.ler_config()
-          nome = os.environ["ARQUIVO"].strip()
-          if not os.path.exists(os.path.join("posts", nome)):
+          nome = os.environ.get("ARQUIVO", "").strip()
+          if not nome:
+              hoje = datetime.now(timezone(timedelta(hours=-3))).strftime("%Y-%m-%d")
+              cronograma = os.path.join("posts", "cronograma-stories.csv")
+              if not os.path.isfile(cronograma):
+                  p.sair(f"Nao achei {cronograma}.")
+              with open(cronograma, encoding="utf-8-sig", newline="") as f:
+                  linhas = [l for l in csv.DictReader(f) if (l.get("data") or "").strip() == hoje]
+              if not linhas:
+                  print(f"Nada no cronograma para {hoje}: nenhuma story publicada.")
+                  sys.exit(0)
+              if len(linhas) > 1:
+                  p.sair(f"O cronograma tem {len(linhas)} linhas para {hoje}: deixe so uma.")
+              nome = (linhas[0].get("arquivo") or "").strip()
+              if not nome:
+                  p.sair(f"A linha de {hoje} no cronograma esta sem arquivo.")
+              print(f"Cronograma de {hoje}: {nome}")
+          caminho = os.path.join("posts", nome)
+          if not os.path.isfile(caminho):
               p.sair(f"Nao achei posts/{nome}. Suba a imagem na pasta posts primeiro.")
+          with open(caminho, "rb") as f:
+              if f.read(3) != b"\xff\xd8\xff":
+                  p.sair(f"posts/{nome} nao e um JPEG de verdade.")
           url = cfg["URL_BASE"] + urllib.parse.quote(nome)
           ok, tipo = p.url_acessivel(url)
           if not ok:
