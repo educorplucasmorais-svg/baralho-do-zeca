@@ -1,0 +1,50 @@
+# Botao manual: publica uma story extra (imagem JPG 1080x1920 dentro da pasta posts/).
+# Nao mexe na fila de cartas nem no publicados.json.
+name: Story extra
+
+on:
+  workflow_dispatch:
+    inputs:
+      arquivo:
+        description: "Nome da imagem dentro da pasta posts (JPG 1080x1920)"
+        required: true
+        default: "story-extra-14-as-de-paus.jpg"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: postar              # nunca roda junto com o post diario
+  cancel-in-progress: false
+
+jobs:
+  story:
+    runs-on: ubuntu-latest
+    env:
+      IG_TOKEN: ${{ secrets.IG_TOKEN }}
+      URL_BASE: https://raw.githubusercontent.com/${{ github.repository }}/main/posts/
+      ARQUIVO: ${{ inputs.arquivo }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Publicar a story extra
+        run: |
+          python - <<'PY'
+          import os, urllib.parse
+          import postar as p
+          cfg = p.ler_config()
+          nome = os.environ["ARQUIVO"].strip()
+          if not os.path.exists(os.path.join("posts", nome)):
+              p.sair(f"Nao achei posts/{nome}. Suba a imagem na pasta posts primeiro.")
+          url = cfg["URL_BASE"] + urllib.parse.quote(nome)
+          ok, tipo = p.url_acessivel(url)
+          if not ok:
+              p.sair(f"A imagem nao abre como JPEG: {url} ({tipo})")
+          ig = p.minha_conta(cfg)[0]
+          sid = p.chamar(cfg, "POST", f"{ig}/media", {"image_url": url, "media_type": "STORIES"})["id"]
+          p.esperar_pronto(cfg, sid, "da story extra")
+          mid = p.chamar(cfg, "POST", f"{ig}/media_publish", {"creation_id": sid})["id"]
+          print(f"STORY EXTRA publicada (id {mid}): {nome}")
+          PY
