@@ -111,5 +111,10 @@
   "quando": "2026-11-03T16:06-03:00",
   "story_id": "17998017360023047",
   "reel_erro": "O container do Reel ficou com status ERROR"
+ },
+ "16-tres-de-paus": {
+  "media_id": "18107959592367040",
+  "quando": "2026-11-04T16:05-03:00",
+  "story_id": "18132324217775832"
  }
 }
