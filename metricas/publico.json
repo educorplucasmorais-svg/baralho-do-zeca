@@ -1,8 +1,8 @@
 {
- "coleta": "2026-11-03T21:09-03:00",
+ "coleta": "2026-11-04T21:09-03:00",
  "follower_demographics": {
   "age": {
-   "25-34": 75,
+   "25-34": 76,
    "35-44": 41,
    "18-24": 23,
    "45-54": 16,
@@ -10,12 +10,12 @@
    "65+": 4
   },
   "gender": {
-   "F": 83,
+   "F": 84,
    "M": 57,
    "U": 23
   },
   "city": {
-   "Betim, Minas Gerais": 43,
+   "Betim, Minas Gerais": 45,
    "Belo Horizonte, Minas Gerais": 29,
    "Contagem, Minas Gerais": 25,
    "Igarapé, Minas Gerais": 5,
@@ -27,12 +27,12 @@
    "Ibirité, Minas Gerais": 3,
    "Sabará, Minas Gerais": 2,
    "Rio de Janeiro, Rio de Janeiro (state)": 2,
-   "Mateus Leme, Minas Gerais": 2,
    "Alfenas, Minas Gerais": 2,
-   "Bomfim, Minas Gerais": 2
+   "Bomfim, Minas Gerais": 2,
+   "London, England": 1
   },
   "country": {
-   "BR": 159,
+   "BR": 160,
    "US": 2,
    "DE": 1,
    "GB": 1
