@@ -1,0 +1,64 @@
+# Publica um post extra no feed (uma imagem JPG dentro da pasta posts/), so pelo botao.
+# Nao tem horario, nao mexe na fila de cartas nem no publicados.json.
+name: Post extra
+
+on:
+  workflow_dispatch:
+    inputs:
+      arquivo:
+        description: "Imagem dentro da pasta posts (JPG 1080x1350)"
+        required: true
+      legenda:
+        description: "Arquivo de texto com a legenda, dentro da pasta posts"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: postar              # nunca roda junto com o post diario
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    env:
+      IG_TOKEN: ${{ secrets.IG_TOKEN }}
+      URL_BASE: https://raw.githubusercontent.com/${{ github.repository }}/main/posts/
+      ARQUIVO: ${{ inputs.arquivo }}
+      LEGENDA: ${{ inputs.legenda }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Publicar o post extra
+        run: |
+          python - <<'PY'
+          import os, urllib.parse
+          import postar as p
+          cfg = p.ler_config()
+          nome = os.environ["ARQUIVO"].strip()
+          caminho = os.path.join("posts", nome)
+          if not os.path.isfile(caminho):
+              p.sair(f"Nao achei posts/{nome}. Suba a imagem na pasta posts primeiro.")
+          with open(caminho, "rb") as f:
+              if f.read(3) != b"\xff\xd8\xff":
+                  p.sair(f"posts/{nome} nao e um JPEG de verdade.")
+          arq_legenda = os.path.join("posts", os.environ["LEGENDA"].strip())
+          if not os.path.isfile(arq_legenda):
+              p.sair(f"Nao achei a legenda {arq_legenda}.")
+          with open(arq_legenda, encoding="utf-8") as f:
+              legenda = f.read().split(p.SEPARADOR_ALT)[0].strip()
+          if not legenda or len(legenda) > 2200:
+              p.sair(f"A legenda precisa ter de 1 a 2200 caracteres (tem {len(legenda)}).")
+          url = cfg["URL_BASE"] + urllib.parse.quote(nome)
+          ok, tipo = p.url_acessivel(url)
+          if not ok:
+              p.sair(f"A imagem nao abre como JPEG: {url} ({tipo})")
+          ig = p.minha_conta(cfg)[0]
+          cid = p.chamar(cfg, "POST", f"{ig}/media", {"image_url": url, "caption": legenda})["id"]
+          p.esperar_pronto(cfg, cid, "do post extra")
+          mid = p.chamar(cfg, "POST", f"{ig}/media_publish", {"creation_id": cid})["id"]
+          print(f"POST EXTRA publicado (id {mid}): {nome}")
+          PY
