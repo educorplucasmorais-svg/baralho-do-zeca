@@ -1,23 +1,23 @@
 {
- "coleta": "2026-11-07T21:09-03:00",
+ "coleta": "2026-11-08T21:09-03:00",
  "follower_demographics": {
   "age": {
    "25-34": 75,
-   "35-44": 44,
+   "35-44": 45,
    "18-24": 23,
    "45-54": 16,
    "55-64": 4,
    "65+": 4
   },
   "gender": {
-   "F": 84,
+   "F": 85,
    "M": 59,
    "U": 23
   },
   "city": {
    "Betim, Minas Gerais": 45,
    "Belo Horizonte, Minas Gerais": 29,
-   "Contagem, Minas Gerais": 26,
+   "Contagem, Minas Gerais": 25,
    "Juatuba, Minas Gerais": 6,
    "Igarapé, Minas Gerais": 5,
    "Goiânia, Goiás": 5,
@@ -32,7 +32,7 @@
    "London, England": 1
   },
   "country": {
-   "BR": 162,
+   "BR": 163,
    "US": 2,
    "DE": 1,
    "GB": 1
