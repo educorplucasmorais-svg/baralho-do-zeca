@@ -1,38 +1,38 @@
 {
- "coleta": "2026-11-10T21:09-03:00",
+ "coleta": "2026-11-11T21:09-03:00",
  "follower_demographics": {
   "age": {
-   "25-34": 75,
+   "25-34": 76,
    "35-44": 45,
-   "18-24": 23,
+   "18-24": 24,
    "45-54": 16,
    "55-64": 4,
    "65+": 4
   },
   "gender": {
    "F": 85,
-   "M": 59,
-   "U": 23
+   "M": 60,
+   "U": 24
   },
   "city": {
-   "Betim, Minas Gerais": 45,
+   "Betim, Minas Gerais": 44,
    "Belo Horizonte, Minas Gerais": 29,
-   "Contagem, Minas Gerais": 25,
+   "Contagem, Minas Gerais": 28,
    "Juatuba, Minas Gerais": 6,
    "Igarapé, Minas Gerais": 5,
    "Goiânia, Goiás": 5,
    "Divinópolis, Minas Gerais": 4,
    "Sorocaba, São Paulo (state)": 4,
    "São Paulo, São Paulo (state)": 3,
-   "Ibirité, Minas Gerais": 3,
+   "Rio de Janeiro, Rio de Janeiro (state)": 3,
    "Sabará, Minas Gerais": 2,
-   "Rio de Janeiro, Rio de Janeiro (state)": 2,
    "Alfenas, Minas Gerais": 2,
    "Bomfim, Minas Gerais": 2,
+   "Diadema, São Paulo (state)": 2,
    "Rio Manso, Minas Gerais": 1
   },
   "country": {
-   "BR": 163,
+   "BR": 165,
    "US": 2,
    "DE": 1,
    "GB": 1
