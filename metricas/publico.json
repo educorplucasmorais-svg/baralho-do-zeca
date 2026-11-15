@@ -1,8 +1,8 @@
 {
- "coleta": "2026-11-13T21:08-03:00",
+ "coleta": "2026-11-14T21:08-03:00",
  "follower_demographics": {
   "age": {
-   "25-34": 76,
+   "25-34": 77,
    "35-44": 48,
    "18-24": 24,
    "45-54": 16,
@@ -10,14 +10,14 @@
    "65+": 4
   },
   "gender": {
-   "F": 85,
+   "F": 86,
    "M": 63,
    "U": 24
   },
   "city": {
-   "Betim, Minas Gerais": 45,
+   "Betim, Minas Gerais": 46,
    "Belo Horizonte, Minas Gerais": 29,
-   "Contagem, Minas Gerais": 28,
+   "Contagem, Minas Gerais": 27,
    "Juatuba, Minas Gerais": 6,
    "Igarapé, Minas Gerais": 5,
    "Goiânia, Goiás": 5,
@@ -32,7 +32,7 @@
    "Diadema, São Paulo (state)": 2
   },
   "country": {
-   "BR": 168,
+   "BR": 169,
    "US": 2,
    "DE": 1,
    "GB": 1
