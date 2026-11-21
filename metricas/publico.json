@@ -1,8 +1,8 @@
 {
- "coleta": "2026-11-19T21:08-03:00",
+ "coleta": "2026-11-20T21:08-03:00",
  "follower_demographics": {
   "age": {
-   "25-34": 78,
+   "25-34": 77,
    "35-44": 48,
    "18-24": 24,
    "45-54": 16,
@@ -12,7 +12,7 @@
   "gender": {
    "F": 87,
    "M": 63,
-   "U": 24
+   "U": 23
   },
   "city": {
    "Betim, Minas Gerais": 44,
@@ -29,10 +29,10 @@
    "Alfenas, Minas Gerais": 2,
    "Bomfim, Minas Gerais": 2,
    "Ibirité, Minas Gerais": 2,
-   "Diadema, São Paulo (state)": 2
+   "London, England": 1
   },
   "country": {
-   "BR": 169,
+   "BR": 168,
    "US": 3,
    "DE": 1,
    "GB": 1
