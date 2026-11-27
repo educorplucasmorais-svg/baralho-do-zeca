@@ -1,8 +1,8 @@
 {
- "coleta": "2026-11-25T21:08-03:00",
+ "coleta": "2026-11-26T21:08-03:00",
  "follower_demographics": {
   "age": {
-   "25-34": 77,
+   "25-34": 76,
    "35-44": 50,
    "18-24": 24,
    "45-54": 16,
@@ -11,13 +11,13 @@
    "13-17": 1
   },
   "gender": {
-   "F": 89,
+   "F": 88,
    "M": 64,
    "U": 23
   },
   "city": {
    "Betim, Minas Gerais": 38,
-   "Contagem, Minas Gerais": 31,
+   "Contagem, Minas Gerais": 30,
    "Belo Horizonte, Minas Gerais": 29,
    "Igarapé, Minas Gerais": 6,
    "Juatuba, Minas Gerais": 6,
@@ -33,7 +33,7 @@
    "Florestal, Minas Gerais": 2
   },
   "country": {
-   "BR": 171,
+   "BR": 170,
    "US": 3,
    "DE": 1,
    "GB": 1
