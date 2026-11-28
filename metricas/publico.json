@@ -1,5 +1,5 @@
 {
- "coleta": "2026-11-26T21:08-03:00",
+ "coleta": "2026-11-27T21:08-03:00",
  "follower_demographics": {
   "age": {
    "25-34": 76,
@@ -16,7 +16,7 @@
    "U": 23
   },
   "city": {
-   "Betim, Minas Gerais": 38,
+   "Betim, Minas Gerais": 39,
    "Contagem, Minas Gerais": 30,
    "Belo Horizonte, Minas Gerais": 29,
    "Igarapé, Minas Gerais": 6,
@@ -30,7 +30,7 @@
    "Sabará, Minas Gerais": 2,
    "Alfenas, Minas Gerais": 2,
    "Bomfim, Minas Gerais": 2,
-   "Florestal, Minas Gerais": 2
+   "Rio Manso, Minas Gerais": 1
   },
   "country": {
    "BR": 170,
